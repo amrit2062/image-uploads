@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+    <h2 id="image">This is image URL</h2>
+    <h2>Upload Image</h2>
+    <form id="uploadedForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="myFile" />
+        <button type="submit">Upload File</button>
+    </form>
+
+    <h3>Uploaded Image:</h3>
+    <img id="uploadedImage" src="" alt="No Image Uploaded" width="300"/>
+
+    <script>
+        const imageElement = document.getElementById("image");
+        const form = document.getElementById("uploadedForm");
+        const uploadedImage = document.getElementById("uploadedImage");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            // Corrected typo: FromData → FormData
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch("/upload", { // Added leading slash
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success === true) { // fixed typo: 'sucess' → 'success'
+                    imageElement.innerText = data.fileUrl; // display image URL
+                    uploadedImage.src = data.fileUrl; // display uploaded image
+                } else {
+                    alert(data.message); // fixed typo: 'alret' → 'alert'
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Something went wrong while uploading the file.");
+            }
+        });
+
+
+        
+    </script>
+</body>
+</html>
